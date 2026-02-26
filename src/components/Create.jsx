@@ -1,66 +1,139 @@
-import React, { useState } from "react"
-import axios from "axios"
-import { Typography, TextField, Button, Box, ToggleButton, ToggleButtonGroup } from "@mui/material"
-import { useNavigate } from "react-router-dom"
+import React, { useState } from "react";
+import axios from "axios";
+import {
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Box,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-const initial = { id: "", specialization: "", maxPatients: 0, currentAppointments: 0 }
-
-const specializationList = ["Cardiology", "Neurology", "Orthopedics", "Pediatrics", "Dermatology"]
+// Matches your DOCTOR model: id, specialization, maxPatients, currentAppointments
+const initial = { id: "", specialization: "", maxPatients: 0, currentAppointments: 0 };
 
 const Create = () => {
-  const navigate = useNavigate()
-  const [form, setForm] = useState(initial)
+  const specializationList = [
+    { name: "Cardiology" },
+    { name: "Neurology" },
+    { name: "Orthopedics" },
+    { name: "Pediatrics" },
+    { name: "Dermatology" },
+  ];
+
+  const navigate = useNavigate();
+  const [form, setForm] = useState(initial);
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    axios.post("http://localhost:8080/addDoctors", form)
-      .then((resp) => console.log(resp.data))
-      .catch((error) => console.log(error))
-    navigate('/')
-  }
+    e.preventDefault();
+    axios
+      .post("http://localhost:8080/addDoctors", form)
+      .then((resp) => {
+        console.log(resp.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    navigate('/');
+  };
+
+  const { id, specialization, maxPatients, currentAppointments } = form;
+
+  // Radio-like: only one specialization selected at a time
+  const handleSpecializationChange = (e) => {
+    setForm({ ...form, specialization: e.target.value });
+  };
 
   return (
-    <Box sx={{ maxWidth: 520, mx: 'auto', mt: 5, px: 3 }}>
-      <Typography variant="h5" fontWeight={700} mb={3}>Add New Doctor</Typography>
-
+    <Paper sx={{ padding: "1%" }} elevation={0}>
+      <Typography sx={{ margin: "3% auto" }} align="center" variant="h5">
+        Add New Doctor
+      </Typography>
       <form autoComplete="off" noValidate onSubmit={handleSubmit}>
-        <TextField
-          fullWidth type="number" label="Doctor ID" variant="outlined"
-          value={form.id} onChange={(e) => setForm({ ...form, id: e.target.value })}
-          sx={{ mb: 2 }}
-        />
-        <TextField
-          fullWidth type="number" label="Max Patients" variant="outlined" required
-          value={form.maxPatients} onChange={(e) => setForm({ ...form, maxPatients: e.target.value })}
-          sx={{ mb: 2 }}
-        />
-        <TextField
-          fullWidth type="number" label="Current Appointments" variant="outlined" required
-          value={form.currentAppointments} onChange={(e) => setForm({ ...form, currentAppointments: e.target.value })}
-          sx={{ mb: 3 }}
-        />
-
-        <Typography variant="body2" fontWeight={600} mb={1} sx={{ color: '#444' }}>Specialization</Typography>
-        <ToggleButtonGroup
-          exclusive value={form.specialization}
-          onChange={(e, val) => val && setForm({ ...form, specialization: val })}
-          sx={{ flexWrap: 'wrap', gap: 1, mb: 3 }}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
         >
-          {specializationList.map((name) => (
-            <ToggleButton key={name} value={name} size="small"
-              sx={{ borderRadius: '20px !important', border: '1px solid #ddd !important', textTransform: 'none', px: 2 }}>
-              {name}
-            </ToggleButton>
-          ))}
-        </ToggleButtonGroup>
+          {/* Doctor ID */}
+          <TextField
+            min="0"
+            type="number"
+            sx={{ width: "50%", margin: "2% auto" }}
+            onChange={(e) => setForm({ ...form, id: e.target.value })}
+            label="Doctor ID"
+            variant="outlined"
+            value={id}
+          />
 
-        <Button fullWidth variant="contained" type="submit" disableElevation
-          sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
-          Add Doctor
-        </Button>
+          {/* Max Patients */}
+          <TextField
+            min="0"
+            type="number"
+            sx={{ width: "50%", margin: "2% auto" }}
+            required
+            onChange={(e) => setForm({ ...form, maxPatients: e.target.value })}
+            label="Max Patients"
+            variant="outlined"
+            value={maxPatients}
+          />
+
+          {/* Current Appointments */}
+          <TextField
+            min="0"
+            type="number"
+            sx={{ width: "50%", margin: "2% auto" }}
+            required
+            onChange={(e) => setForm({ ...form, currentAppointments: e.target.value })}
+            label="Current Appointments"
+            variant="outlined"
+            value={currentAppointments}
+          />
+
+          {/* Specialization - checkbox list (same structure as skills) */}
+          <Box sx={{ margin: "1% auto" }}>
+            <h3>Please select specialization</h3>
+            <ul>
+              {specializationList.map(({ name }, index) => {
+                return (
+                  <li key={index}>
+                    <div>
+                      <div>
+                        <input
+                          type="radio"
+                          id={`specialization-${index}`}
+                          name="specialization"
+                          value={name}
+                          onChange={handleSpecializationChange}
+                        />
+                        <label htmlFor={`specialization-${index}`}>{name}</label>
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+            {/* Show selected */}
+            {specialization && (
+              <Typography variant="body2" sx={{ color: "#585858" }}>
+                Selected: <strong>{specialization}</strong>
+              </Typography>
+            )}
+          </Box>
+
+          <Button
+            sx={{ width: "50%", margin: "2% auto" }}
+            variant="contained"
+            type="submit"
+          >
+            Submit
+          </Button>
+        </Box>
       </form>
-    </Box>
-  )
-}
+    </Paper>
+  );
+};
 
-export default Create
+export default Create;

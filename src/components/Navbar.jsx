@@ -1,22 +1,41 @@
 import React from 'react'
-import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material"
-import LocalHospitalIcon from '@mui/icons-material/LocalHospital'
+import {
+    AppBar,
+    Toolbar,
+    Box,
+    Grid,
+    Typography,
+    Button,
+  } from "@mui/material";
+  
 
 const Navbar = () => {
   return (
-    <AppBar position="static" elevation={0} sx={{ background: '#fff', borderBottom: '1px solid #e0e0e0' }}>
-      <Toolbar sx={{ px: 3 }}>
-        <LocalHospitalIcon sx={{ color: '#1976d2', mr: 1 }} />
-        <Typography variant="h6" sx={{ flexGrow: 1, color: '#1a1a1a', fontWeight: 700 }}>
-          Hospital Management
-        </Typography>
-        <Button href="http://localhost:3000" sx={{ color: '#555', textTransform: 'none', mr: 1 }}>Home</Button>
-        <Button href="http://localhost:3000/create" sx={{ color: '#555', textTransform: 'none', mr: 1 }}>Add Doctor</Button>
-        <Button href="http://localhost:3000/book" variant="contained" disableElevation sx={{ textTransform: 'none', borderRadius: 2 }}>
-          Book Appointment
-        </Button>
-      </Toolbar>
-    </AppBar>
+    <div>
+      <Grid container spacing={2} sx={{ margin: "2%" }}>
+        <Box sx={{ flexGrow: 1 }}>
+          <AppBar position="static" style={{ background: '#ADD8E6' }}>
+            <Toolbar variant="dense">
+              <Typography variant="h4" align='Left' component="div" sx={{ flexGrow: 1, fontFamily:"revert", fontSize:"500", color:"black" }}>
+                Hospital Management
+              </Typography>
+
+              <Box sx={{ m: 0.5, mx: 'auto', width: 80 }}>
+                <Button variant="outlined" href='http://localhost:3000'>Home</Button>
+              </Box>
+              <Box sx={{ m: 0.5, mx: 'auto', width: 120 }}>
+                <Button variant="outlined" href='http://localhost:3000/create'>Add Doctor</Button>
+              </Box>
+              <Box sx={{ m: 0.5, mx: 'auto', width: 180 }}>
+                <Button variant="outlined" href='http://localhost:3000/book'>Book Appointment</Button>
+              </Box>
+        </Toolbar>
+      </AppBar>
+    </Box>
+    </Grid>
+      <Grid item xs={12} sx={12} md={12} lg={12}>
+      </Grid>
+    </div>
   )
 }
 

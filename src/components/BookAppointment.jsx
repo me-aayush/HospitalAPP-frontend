@@ -1,70 +1,115 @@
-import React, { useState } from "react"
-import { Typography, Button, Box, Alert, ToggleButton, ToggleButtonGroup } from "@mui/material"
-import axios from "axios"
-
-const specializationList = ["Cardiology", "Neurology", "Orthopedics", "Pediatrics", "Dermatology"]
+import React, { useState } from "react";
+import {
+  Typography,
+  Button,
+  Paper,
+  Box,
+  Card,
+  Alert,
+} from "@mui/material";
+import axios from "axios";
 
 const BookAppointment = () => {
-  const [selectedSpec, setSelectedSpec] = useState("")
-  const [message, setMessage] = useState(null)
-  const [isSuccess, setIsSuccess] = useState(false)
+  const specializationList = [
+    { name: "Cardiology" },
+    { name: "Neurology" },
+    { name: "Orthopedics" },
+    { name: "Pediatrics" },
+    { name: "Dermatology" },
+  ];
+
+  const [selectedSpec, setSelectedSpec] = useState("");
+  const [message, setMessage] = useState(null);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!selectedSpec) {
-      setMessage("Please select a specialization.")
-      setIsSuccess(false)
-      return
+      setMessage("Please select a specialization.");
+      setIsSuccess(false);
+      return;
     }
 
     axios.post(`http://localhost:8080/Booking?specialization=${selectedSpec}`)
       .then((resp) => {
-        setMessage(resp.data)
-        setIsSuccess(resp.data.includes("BOOKED"))
+        setMessage(resp.data);
+        setIsSuccess(resp.data.includes("BOOKED"));
       })
       .catch((error) => {
-        setMessage("Something went wrong. Please try again.")
-        setIsSuccess(false)
-        console.log(error)
-      })
-  }
+        setMessage("Something went wrong. Please try again.");
+        setIsSuccess(false);
+        console.log(error);
+      });
+  };
 
   return (
-    <Box sx={{ maxWidth: 520, mx: 'auto', mt: 5, px: 3 }}>
-      <Typography variant="h5" fontWeight={700} mb={1}>Book Appointment</Typography>
-      <Typography variant="body2" sx={{ color: '#888', mb: 3 }}>
-        Select a specialization to find an available doctor.
+    <Paper sx={{ padding: "1%" }} elevation={0}>
+      <Typography sx={{ margin: "3% auto" }} align="center" variant="h5">
+        Book Appointment
       </Typography>
 
       <form autoComplete="off" noValidate onSubmit={handleSubmit}>
-        <Typography variant="body2" fontWeight={600} mb={1} sx={{ color: '#444' }}>Specialization</Typography>
-        <ToggleButtonGroup
-          exclusive value={selectedSpec}
-          onChange={(e, val) => { if (val) { setSelectedSpec(val); setMessage(null) } }}
-          sx={{ flexWrap: 'wrap', gap: 1, mb: 3 }}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
         >
-          {specializationList.map((name) => (
-            <ToggleButton key={name} value={name} size="small"
-              sx={{ borderRadius: '20px !important', border: '1px solid #ddd !important', textTransform: 'none', px: 2 }}>
-              {name}
-            </ToggleButton>
-          ))}
-        </ToggleButtonGroup>
+          <Box sx={{ margin: "1% auto" }}>
+            <h3>Please select specialization</h3>
+            <ul>
+              {specializationList.map(({ name }, index) => (
+                <li key={index}>
+                  <div>
+                    <div>
+                      <input
+                        type="radio"
+                        id={`specialization-${index}`}
+                        name="specialization"
+                        value={name}
+                        checked={selectedSpec === name}
+                        onChange={(e) => {
+                          setSelectedSpec(e.target.value);
+                          setMessage(null);
+                        }}
+                      />
+                      <label htmlFor={`specialization-${index}`}>{name}</label>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </Box>
 
-        <Button fullWidth variant="contained" type="submit" disableElevation
-          sx={{ borderRadius: 2, textTransform: 'none', py: 1.2, mb: 2 }}>
-          Book Appointment
-        </Button>
+          <Button
+            sx={{ width: "50%", margin: "2% auto" }}
+            variant="contained"
+            type="submit"
+          >
+            Book Appointment
+          </Button>
 
-        {message && (
-          <Alert severity={isSuccess ? "success" : "error"} sx={{ borderRadius: 2 }}>
-            {message}
-          </Alert>
-        )}
+          {message && (
+            <Card
+              sx={{
+                width: "50%",
+                margin: "2% auto",
+                padding: "3%",
+                backgroundColor: isSuccess ? "#d4edda" : "#f8d7da",
+                border: isSuccess ? "1px solid #c3e6cb" : "1px solid #f5c6cb",
+              }}
+            >
+              <Alert severity={isSuccess ? "success" : "error"} sx={{ background: "transparent", padding: 0 }}>
+                {message}
+              </Alert>
+            </Card>
+          )}
+        </Box>
       </form>
-    </Box>
-  )
-}
+    </Paper>
+  );
+};
 
-export default BookAppointment
+export default BookAppointment;
