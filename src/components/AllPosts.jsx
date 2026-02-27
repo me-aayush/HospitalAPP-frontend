@@ -27,7 +27,7 @@ const handleEdit = (id) => {
     useEffect(() => {
       const fetchDoctors = async () => {
         // Filters by specialization on frontend
-        const response = await axios.get(`http://localhost:8080/AllDoctors`);
+        const response = await axios.get(`https://hospital-app-production-c2e2.up.railway.app/AllDoctors`);
         const filtered = response.data.filter((d) =>
           d.specialization.toLowerCase().includes(query.toLowerCase())
         );
@@ -35,7 +35,7 @@ const handleEdit = (id) => {
       };
 
         const fetchInitialDoctors = async () => {
-            const response = await axios.get(`http://localhost:8080/AllDoctors`);
+            const response = await axios.get(`https://hospital-app-production-c2e2.up.railway.app/AllDoctors`);
             setPost(response.data);
         }
 
@@ -47,7 +47,7 @@ const handleEdit = (id) => {
 
       const handleDelete = (id) => {
         async function deleteDoctor() {
-          await axios.delete(`http://localhost:8080/DeleteDoctor/${id}`);
+          await axios.delete(`https://hospital-app-production-c2e2.up.railway.app/DeleteDoctors/{id}`);
         }
         deleteDoctor();
         window.location.reload();
