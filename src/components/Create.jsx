@@ -27,7 +27,7 @@ const Create = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:8080/addDoctors", form)
+      .post("https://hospital-app-production-c2e2.up.railway.app/addDoctors", form)
       .then((resp) => {
         console.log(resp.data);
       })
