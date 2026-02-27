@@ -31,7 +31,7 @@ const BookAppointment = () => {
       return;
     }
 
-    axios.post(`http://localhost:8080/Booking?specialization=${selectedSpec}`)
+    axios.post(`https://hospital-app-production-c2e2.up.railway.app/Booking?specialization=${selectedSpec}`)
       .then((resp) => {
         setMessage(resp.data);
         setIsSuccess(resp.data.includes("BOOKED"));
